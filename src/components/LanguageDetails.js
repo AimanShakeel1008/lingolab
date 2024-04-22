@@ -63,7 +63,7 @@ function LanguageDetails() {
         <Typography variant="h6" sx={{ mt: 2 }}>{`Progress: ${progress.toFixed(0)}%`}</Typography>
         <LinearProgress variant="determinate" value={progress} sx={{ height: 10, borderRadius: 5, mb: 3 }} />
         <Grid container spacing={2}>
-          {lessons.map((lesson, index) => (
+          {lessons.length > 0 ? (lessons.map((lesson, index) => (
             <Grid item xs={12} key={lesson.id}>
               <Card sx={{
                 display: 'flex',
@@ -88,7 +88,9 @@ function LanguageDetails() {
                 </CardActionArea>
               </Card>
             </Grid>
-          ))}
+          ))):(
+            <Typography variant="h6" sx={{ mt: 3, width: '100%', textAlign: 'center' }}>Lessons coming soon!</Typography>
+          )}
         </Grid>
       </Container>
       <Footer />
