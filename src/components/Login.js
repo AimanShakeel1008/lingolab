@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const [error, setError] = useState('');  // State to store error message
+    const [error, setError] = useState('');  
     const navigate = useNavigate();
 
     const handleChange = e => {
@@ -14,17 +14,17 @@ function Login() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        // Check if username or password is empty
+        
         if (!credentials.username || !credentials.password) {
             setError('Both username and password are required');
-            return;  // Prevent the form from being submitted
+            return;  
         }
         try {
             const response = await axios.post('http://localhost:8080/api/auth/authenticate', credentials);
             localStorage.setItem('jwt', response.data.jwt);
             localStorage.setItem('username', credentials.username);
-            //alert('Login successful');
-            navigate('/dashboard');  // Navigate to dashboard or another page
+            
+            navigate('/dashboard');  
         } catch (error) {
             alert('Login failed');
             console.error(error);

@@ -12,7 +12,7 @@ function LessonDetails() {
   const [lesson, setLesson] = React.useState({
     title: '',
     description: '',
-    completed: false, // Assuming you have a way to fetch this or it's included in the future API response
+    completed: false, 
   });
 
   React.useEffect(() => {
@@ -21,7 +21,7 @@ function LessonDetails() {
         const response = await axios.get(`http://localhost:8081/api/contents/${lessonId}`);
         setLesson({
           ...response.data,
-          completed: response.data.completed || false // Update according to your API response
+          completed: response.data.completed || false 
         });
       } catch (error) {
         console.error('Error fetching lesson details:', error);
@@ -37,7 +37,7 @@ function LessonDetails() {
 
   const handleCompletion = async () => {
     try {
-      // API endpoint to toggle completion might be different
+      
       await axios.put(`http://localhost:8081/api/contents/${lessonId}/complete`, { completed: !lesson.completed });
       setLesson(prev => ({ ...prev, completed: !prev.completed }));
     } catch (error) {
