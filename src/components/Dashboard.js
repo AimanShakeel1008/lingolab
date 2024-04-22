@@ -6,6 +6,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import Header from './Header'; // Make sure the path is correct
+import Footer from './Footer'; // Make sure the path is correct
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -55,9 +57,17 @@ function Dashboard() {
     };
 
     const handleAddLanguage = () => {
-        if (!selectedLanguage) return;
+        if (!selectedLanguage) {
+            setErrorMessage('Please select a language to add.');
+            setOpenSnackbar(true);
+            return;
+        }
         const languageToAdd = availableLanguages.find(lang => lang.name === selectedLanguage);
-        if (!languageToAdd) return;
+        if (!languageToAdd) {
+            setErrorMessage('Selected language not found.');
+            setOpenSnackbar(true);
+            return;
+        }
         axios.post('http://localhost:8080/api/user/languages/register', {
             username,
             languageId: languageToAdd.id
@@ -101,87 +111,90 @@ function Dashboard() {
         setOpenDialog(false);
     };
 
+    const handleNavigateToLanguageDetails = (languageId) => {
+        navigate(`/language/${languageId}`);
+    };
+
     return (
-        <Container maxWidth="lg">
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 4 }}>
-                <Typography variant="h4">Your Language Dashboard</Typography>
-                <Box>
-                    <Button startIcon={<AccountCircleIcon />} sx={{ mr: 2 }}>Profile</Button>
-                    <Button startIcon={<LogoutIcon />} onClick={handleLogout}>Logout</Button>
+        <React.Fragment>
+            <Header onLogout={handleLogout} />
+            <Container maxWidth="lg">
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 4 }}>
+                    <Typography variant="h4">Your Language Dashboard</Typography>
                 </Box>
-            </Box>
-            <Grid container spacing={3}>
-                {languages.length > 0 ? (
-                    languages.map(language => (
-                        <Grid item xs={12} sm={6} md={4} key={language.id}>
-                            <Card sx={{ maxWidth: 345, boxShadow: 3, bgcolor: cardColor, color: '#fff', position: 'relative' }}>
-                                <Tooltip title="Unregister">
-                                    <IconButton onClick={() => handleDeleteLanguage(language.id)} sx={{ position: 'absolute', right: '8px', top: '8px', color: 'gray', zIndex: 1000 }}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <CardActionArea>
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="div">{language.name}</Typography>
-                                        <Tooltip title={`Registered on: ${format(new Date(language.registrationDate), 'PPP')}`}>
-                                            <Typography variant="body2">Registration Date: {format(new Date(language.registrationDate), 'PPP')}</Typography>
-                                        </Tooltip>
-                                        <Typography variant="body2">Progress: {language.progress}%</Typography>
-                                        <LinearProgress variant="determinate" value={language.progress} sx={{ height: 10, borderRadius: 5, mt: 1 }} />
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        </Grid>
-                    ))
-                ) : (
-                    <Typography variant="h6" sx={{ mt: 3, width: '100%', textAlign: 'center' }}>Currently no learning in progress. Select a language from the dropdown to start learning.</Typography>
-                )}
-            </Grid>
-            <Box sx={{ mt: 4, width: 300 }}>
-                <Select
-                    value={selectedLanguage}
-                    onChange={e => setSelectedLanguage(e.target.value)}
-                    displayEmpty
-                    fullWidth
+                <Grid container spacing={3}>
+                    {languages.length > 0 ? (
+                        languages.map(language => (
+                            <Grid item xs={12} sm={6} md={4} key={language.id}>
+                                <Card sx={{ maxWidth: 345, boxShadow: 3, bgcolor: cardColor, color: '#fff', position: 'relative' }}>
+                                    <Tooltip title="Unregister">
+                                        <IconButton onClick={() => handleDeleteLanguage(language.id)} sx={{ position: 'absolute', right: '8px', top: '8px', color: 'gray', zIndex: 1000 }}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <CardActionArea onClick={() => handleNavigateToLanguageDetails(language.id)}>
+                                        <CardContent>
+                                            <Typography gutterBottom variant="h5" component="div">{language.name}</Typography>
+                                            <Tooltip title={`Registered on: ${format(new Date(language.registrationDate), 'PPP')}`}>
+                                                <Typography variant="body2">Registration Date: {format(new Date(language.registrationDate), 'PPP')}</Typography>
+                                            </Tooltip>
+                                            <Typography variant="body2">Progress: {language.progress}%</Typography>
+                                            <LinearProgress variant="determinate" value={language.progress} sx={{ height: 10, borderRadius: 5, mt: 1 }} />
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                        ))
+                    ) : (
+                        <Typography variant="h6" sx={{ mt: 3, width: '100%', textAlign: 'center' }}>Currently no learning in progress. Select a language from the dropdown to start learning.</Typography>
+                    )}
+                </Grid>
+                <Box sx={{ mt: 4, width: 300 }}>
+                    <Select
+                        value={selectedLanguage}
+                        onChange={e => setSelectedLanguage(e.target.value)}
+                        displayEmpty
+                        fullWidth
+                    >
+                        <MenuItem value=""><em>Select a language</em></MenuItem>
+                        {availableLanguages.map(lang => (
+                            <MenuItem key={lang.id} value={lang.name}>{lang.name}</MenuItem>
+                        ))}
+                    </Select>
+                    <Button variant="contained" sx={{ mt: 2 }} onClick={handleAddLanguage}>Add Language</Button>
+                </Box>
+                <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={6000}
+                    onClose={() => setOpenSnackbar(false)}
+                    message={errorMessage}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                />
+                <Dialog
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
                 >
-                    <MenuItem value=""><em>Select a language</em></MenuItem>
-                    {availableLanguages.map(lang => (
-                        <MenuItem key={lang.id} value={lang.name}>{lang.name}</MenuItem>
-                    ))}
-                </Select>
-                <Button variant="contained" sx={{ mt: 2 }} onClick={handleAddLanguage}>Add Language</Button>
-            </Box>
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={6000}
-                onClose={() => setOpenSnackbar(false)}
-                message={errorMessage}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            />
-            <Dialog
-                open={openDialog}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{"Confirm Unregistration"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to unregister? All your progress for this language will be lost.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={confirmDelete} color="primary" autoFocus>
-                        Confirm
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                    <DialogTitle id="alert-dialog-title">{"Confirm Unregistration"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Are you sure you want to unregister? All your progress for this language will be lost.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={confirmDelete} color="primary" autoFocus>
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Container>
+            <Footer />
+        </React.Fragment>
     );
 }
 
 export default Dashboard;
-

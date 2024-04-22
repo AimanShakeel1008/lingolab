@@ -5,12 +5,18 @@ import HomePage from './components/HomePage';
 import Registration from './components/Registration';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import LanguageDetails from './components/LanguageDetails';
+import LessonDetails from './components/LessonDetails';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
 const theme = createTheme();
 
+const PrivateRoute = ({ children }) => {
+  const auth = localStorage.getItem('jwt');
+  return auth ? children : <Navigate to="/login" />;
+};
+
 function App() {
-  const isAuthenticated = () => !!localStorage.getItem('jwt');
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -19,7 +25,18 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/register" element={<Registration />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/dashboard" element={
+                      <PrivateRoute><Dashboard />
+                      </PrivateRoute>} 
+                    />
+                    <Route path="/language/:languageId" element={
+                      <PrivateRoute><LanguageDetails />
+                      </PrivateRoute>} 
+                    />
+                    <Route path="/lesson/:lessonId" element={
+                      <PrivateRoute><LessonDetails />
+                      </PrivateRoute>} 
+                    />
                 </Routes>
             </Router>
         </ThemeProvider>
