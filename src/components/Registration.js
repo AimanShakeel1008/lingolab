@@ -118,16 +118,15 @@ function Registration() {
                     >
                         Register
                     </Button>
-                    {message.startsWith('Registration successful') && (
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            sx={{ mt: 2 }}
-                            onClick={goToLogin}
-                        >
-                            Go to Login
-                        </Button>
-                    )}
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        sx={{ mt: 1 }}
+                        onClick={() => navigate('/login')}
+                    >
+                        Already have an account? Login
+                    </Button>
+                    {message.startsWith('Registration successful') }
                 </Box>
             </Box>
         </Container>
