@@ -8,6 +8,8 @@ import Dashboard from './components/Dashboard';
 import LanguageDetails from './components/LanguageDetails';
 import LessonDetails from './components/LessonDetails';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { Navigate, Outlet } from 'react-router-dom';
+
 
 const theme = createTheme();
 
