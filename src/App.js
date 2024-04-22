@@ -19,7 +19,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/register" element={<Registration />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                 </Routes>
             </Router>
         </ThemeProvider>
