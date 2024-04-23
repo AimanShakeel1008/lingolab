@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Typography, Box, Button, Card, CardContent, LinearProgress, Checkbox, CardActionArea, Grid, FormControlLabel } from '@mui/material';
+import {
+  Container, Typography, Box, Button, Card, CardActionArea,
+  Grid, FormControlLabel, Checkbox, LinearProgress
+} from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BookIcon from '@mui/icons-material/Book';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import Header from './Header'; // Ensure this is the correct path
-import Footer from './Footer'; // Ensure this is the correct path
+import Header from './Header';
+import Footer from './Footer';
 import axios from 'axios';
 
 function LanguageDetails() {
@@ -16,6 +19,8 @@ function LanguageDetails() {
   const [lessons, setLessons] = useState([]);
   const [progress, setProgress] = useState(50); // Mock data
   const [languageName, setLanguageName] = useState('');
+  const jwt = localStorage.getItem('jwt');  // Ensure you're getting JWT and username correctly
+  const username = localStorage.getItem('username');
 
   useEffect(() => {
     fetchLessons(languageId);
@@ -24,16 +29,39 @@ function LanguageDetails() {
   const fetchLessons = async (languageId) => {
     try {
       const response = await axios.get(`http://localhost:8081/api/contents/language/${languageId}`);
-      setLessons(response.data);
-      setLanguageName(response.data[0]?.language?.name || ''); // Set the language name from the response
+      const lessonsData = response.data;
+      setLanguageName(lessonsData[0]?.language?.name || '');
+      fetchUserProgress(lessonsData);
     } catch (error) {
       console.error('Error fetching lessons:', error);
     }
   };
 
-  const navigateToLessonDetails = (lessonId) => {
-    navigate(`/lesson/${lessonId}`);
+  const fetchUserProgress = async (lessonsData) => {
+    try {
+      const progressResponse = await axios.get(`http://localhost:8080/api/user/lessons/progress?username=${username}`, {
+        headers: { Authorization: `Bearer ${jwt}` }
+      });
+      const progressMap = progressResponse.data.reduce((acc, item) => ({
+        ...acc,
+        [item.lessonId]: item.progressPercent
+      }), {});
+
+      const updatedLessons = lessonsData.map(lesson => ({
+        ...lesson,
+        completed: progressMap[lesson.id] === 100
+      }));
+
+      setLessons(updatedLessons);
+    } catch (error) {
+      console.error('Error fetching user progress:', error);
+    }
   };
+
+  const navigateToLessonDetails = (lessonId, completed) => {
+    navigate(`/lesson/${lessonId}`, { state: { completed } });
+  };
+  
 
   const getIcon = (type) => {
     switch (type) {
@@ -60,10 +88,15 @@ function LanguageDetails() {
             <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/dashboard')} sx={{ mb: 2 }}>Back to Dashboard</Button>
           </Box>
         </Box>
+        {lessons.length > 0 ? (
+        <>
         <Typography variant="h6" sx={{ mt: 2 }}>{`Progress: ${progress.toFixed(0)}%`}</Typography>
         <LinearProgress variant="determinate" value={progress} sx={{ height: 10, borderRadius: 5, mb: 3 }} />
+        </>
+        ):(<></>)}
         <Grid container spacing={2}>
-          {lessons.length > 0 ? (lessons.map((lesson, index) => (
+          {lessons.length > 0 ? (
+            lessons.map((lesson, index) => (
             <Grid item xs={12} key={lesson.id}>
               <Card sx={{
                 display: 'flex',
@@ -72,7 +105,7 @@ function LanguageDetails() {
                 padding: 2,
                 bgcolor: index % 2 === 0 ? '#f7f7f7' : '#e0e0e0'
               }}>
-                <CardActionArea onClick={() => navigateToLessonDetails(lesson.id)} sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
+                <CardActionArea onClick={() => navigateToLessonDetails(lesson.id, lesson.completed)} sx={{ display: 'flex', flexGrow: 1, alignItems: 'center' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', marginRight: 2 }}>
                     {getIcon(lesson.contentType)}
                   </Box>
@@ -88,9 +121,9 @@ function LanguageDetails() {
                 </CardActionArea>
               </Card>
             </Grid>
-          ))):(
-            <Typography variant="h6" sx={{ mt: 3, width: '100%', textAlign: 'center' }}>Lessons coming soon!</Typography>
-          )}
+          )) ) : (
+            <Typography variant="h6" sx={{ mt: 3, width: '100%', textAlign: 'center' }}>Lessons coming soon.</Typography>
+        )}
         </Grid>
       </Container>
       <Footer />

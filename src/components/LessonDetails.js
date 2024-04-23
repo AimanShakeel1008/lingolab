@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Container, Typography, Box, Button, Checkbox, FormControlLabel } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Header from './Header';
@@ -9,6 +9,7 @@ import axios from 'axios';
 function LessonDetails() {
   const { lessonId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation(); // Retrieve location object
   const jwt = localStorage.getItem('jwt');
   const username = localStorage.getItem('username');
 
@@ -23,8 +24,10 @@ function LessonDetails() {
       try {
         const response = await axios.get(`http://localhost:8081/api/contents/${lessonId}`);
         setLesson({
-          ...response.data,
-          completed: response.data.completed || false 
+          title: response.data.title,
+          description: response.data.description,
+          // Check if completed state is passed, otherwise fallback to fetched data
+          completed: location.state?.completed ?? response.data.completed 
         });
       } catch (error) {
         console.error('Error fetching lesson details:', error);
@@ -32,7 +35,7 @@ function LessonDetails() {
     };
 
     fetchLesson();
-  }, [lessonId]);
+  }, [lessonId, location.state?.completed]); // Listen to changes in completed state from location
 
   const handleBack = () => {
     navigate(-1);
@@ -43,16 +46,15 @@ function LessonDetails() {
     const progressPercent = newCompletedStatus ? 100 : 0;
 
     try {
-      setLesson(prev => ({ ...prev, completed: newCompletedStatus }));
-
       await axios.post('http://localhost:8080/api/user/lessons/complete', {
         username: username,
         lessonId: parseInt(lessonId, 10),
         progressPercent: progressPercent
-      },{
+      }, {
         headers: { Authorization: `Bearer ${jwt}` }
       });
 
+      setLesson(prev => ({ ...prev, completed: newCompletedStatus }));
     } catch (error) {
       console.error('Error updating lesson completion:', error);
       setLesson(prev => ({ ...prev, completed: !newCompletedStatus }));
@@ -68,7 +70,7 @@ function LessonDetails() {
           <Typography variant="h4" sx={{ mt: 2, mb: 1 }}>{lesson.title}</Typography>
           <Typography variant="body1">{lesson.description}</Typography>
           <Typography variant="body2" sx={{ mt: 2, mb: 2 }}>
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
           </Typography>
           <FormControlLabel
             control={<Checkbox checked={lesson.completed} onChange={handleCompletion} />}
