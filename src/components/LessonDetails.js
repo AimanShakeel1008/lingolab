@@ -9,10 +9,13 @@ import axios from 'axios';
 function LessonDetails() {
   const { lessonId } = useParams();
   const navigate = useNavigate();
+  const jwt = localStorage.getItem('jwt');
+  const username = localStorage.getItem('username');
+
   const [lesson, setLesson] = React.useState({
     title: '',
     description: '',
-    completed: false, 
+    completed: false,
   });
 
   React.useEffect(() => {
@@ -36,12 +39,23 @@ function LessonDetails() {
   };
 
   const handleCompletion = async () => {
+    const newCompletedStatus = !lesson.completed;
+    const progressPercent = newCompletedStatus ? 100 : 0;
+
     try {
-      
-      await axios.put(`http://localhost:8081/api/contents/${lessonId}/complete`, { completed: !lesson.completed });
-      setLesson(prev => ({ ...prev, completed: !prev.completed }));
+      setLesson(prev => ({ ...prev, completed: newCompletedStatus }));
+
+      await axios.post('http://localhost:8080/api/user/lessons/complete', {
+        username: username,
+        lessonId: parseInt(lessonId, 10),
+        progressPercent: progressPercent
+      },{
+        headers: { Authorization: `Bearer ${jwt}` }
+      });
+
     } catch (error) {
       console.error('Error updating lesson completion:', error);
+      setLesson(prev => ({ ...prev, completed: !newCompletedStatus }));
     }
   };
 
