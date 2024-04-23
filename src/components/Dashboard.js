@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Container, Box, Card, CardContent, Button, Grid, CardActionArea, LinearProgress, Select, MenuItem, Tooltip, Snackbar, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import Header from './Header'; // Make sure the path is correct
-import Footer from './Footer'; // Make sure the path is correct
+import Header from './Header';
+import Footer from './Footer';
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -18,7 +16,6 @@ function Dashboard() {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [languageToUnregister, setLanguageToUnregister] = useState(null);
-    const cardColor = '#3f51b5';
     const jwt = localStorage.getItem('jwt');
     const username = localStorage.getItem('username');
 
@@ -27,27 +24,48 @@ function Dashboard() {
         fetchAvailableLanguages();
     }, [username]);
 
-    const fetchLanguages = () => {
-        axios.get(`http://localhost:8080/api/user/languages/registrations?username=${username}`, {
-            headers: { Authorization: `Bearer ${jwt}` }
-        })
-        .then(response => {
-            setLanguages(response.data.map(lang => ({
-                id: lang.language.id,
-                name: lang.language.name,
-                registrationDate: lang.registrationDate,
-                progress: lang.progress
-            })));
-        })
-        .catch(error => console.error('Error fetching languages:', error));
-    };
-
     const fetchAvailableLanguages = () => {
         axios.get('http://localhost:8081/api/languages')
         .then(response => {
             setAvailableLanguages(response.data);
         })
         .catch(error => console.error('Error fetching available languages:', error));
+    };
+
+    const fetchLanguages = async () => {
+        try {
+            const registrationsResponse = await axios.get(`http://localhost:8080/api/user/languages/registrations?username=${username}`, {
+                headers: { Authorization: `Bearer ${jwt}` }
+            });
+            const lessonsData = await axios.get(`http://localhost:8080/api/user/lessons/progress?username=${username}`, {
+                headers: { Authorization: `Bearer ${jwt}` }
+            });
+
+            const progressMap = lessonsData.data.reduce((acc, lesson) => {
+                acc[lesson.lessonId] = lesson.progressPercent === 100;
+                return acc;
+            }, {});
+
+            const promises = registrationsResponse.data.map(async (lang) => {
+                const lessonsResponse = await axios.get(`http://localhost:8081/api/contents/language/${lang.language.id}`);
+                const lessons = lessonsResponse.data || [];
+                const completedCount = lessons.filter(lesson => progressMap[lesson.id]).length;
+                const totalLessons = lessons.length;
+                const progress = totalLessons > 0 ? (completedCount / totalLessons) * 100 : 0;
+                return {
+                    id: lang.language.id,
+                    name: lang.language.name,
+                    registrationDate: lang.registrationDate,
+                    progress: Math.round(progress)
+                };
+            });
+
+            Promise.all(promises).then(completedLanguages => {
+                setLanguages(completedLanguages);
+            });
+        } catch (error) {
+            console.error('Error fetching languages:', error);
+        }
     };
 
     const handleLogout = () => {
@@ -126,8 +144,8 @@ function Dashboard() {
                     {languages.length > 0 ? (
                         languages.map(language => (
                             <Grid item xs={12} sm={6} md={4} key={language.id}>
-                                <Card sx={{ maxWidth: 345, boxShadow: 3, bgcolor: cardColor, color: '#fff', position: 'relative' }}>
-                                    <Tooltip title="Unregister">
+                                <Card sx={{ maxWidth: 345, boxShadow: 3, bgcolor: '#3f51b5', color: '#fff', position: 'relative' }}>
+                                <Tooltip title="Unregister">
                                         <IconButton onClick={() => handleDeleteLanguage(language.id)} sx={{ position: 'absolute', right: '8px', top: '8px', color: 'gray', zIndex: 1000 }}>
                                             <DeleteIcon />
                                         </IconButton>
