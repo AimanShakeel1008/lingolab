@@ -34,10 +34,10 @@ function Dashboard() {
 
     const fetchLanguages = async () => {
         try {
-            const registrationsResponse = await axios.get(`http://localhost:8080/api/user/languages/registrations?username=${username}`, {
+            const registrationsResponse = await axios.get(`http://localhost:8080/api/users/languages/registrations?username=${username}`, {
                 headers: { Authorization: `Bearer ${jwt}` }
             });
-            const lessonsData = await axios.get(`http://localhost:8080/api/user/lessons/progress?username=${username}`, {
+            const lessonsData = await axios.get(`http://localhost:8080/api/users/lessons/progress?username=${username}`, {
                 headers: { Authorization: `Bearer ${jwt}` }
             });
 
@@ -47,7 +47,7 @@ function Dashboard() {
             }, {});
 
             const promises = registrationsResponse.data.map(async (lang) => {
-                const lessonsResponse = await axios.get(`http://localhost:8081/api/contents/language/${lang.language.id}`);
+                const lessonsResponse = await axios.get(`http://localhost:8081/api/languages/contents/language/${lang.language.id}`);
                 const lessons = lessonsResponse.data || [];
                 const completedCount = lessons.filter(lesson => progressMap[lesson.id]).length;
                 const totalLessons = lessons.length;
@@ -86,7 +86,7 @@ function Dashboard() {
             setOpenSnackbar(true);
             return;
         }
-        axios.post('http://localhost:8080/api/user/languages/register', {
+        axios.post('http://localhost:8080/api/users/languages/register', {
             username,
             languageId: languageToAdd.id
         }, {
@@ -109,7 +109,7 @@ function Dashboard() {
     };
 
     const confirmDelete = () => {
-        axios.delete(`http://localhost:8080/api/user/languages/unregister/${username}/${languageToUnregister}`, {
+        axios.delete(`http://localhost:8080/api/users/languages/unregister/${username}/${languageToUnregister}`, {
             headers: { Authorization: `Bearer ${jwt}` }
         })
         .then(() => {

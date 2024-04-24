@@ -39,7 +39,7 @@ function Registration() {
             return; // Stop the submission if validation fails
         }
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/register', user);
+            const response = await axios.post('http://localhost:8080/api/users/register', user);
             setMessage('Registration successful! You can now login.');
             setUser({ username: '', email: '', password: '' }); // Clear the form fields
         } catch (error) {

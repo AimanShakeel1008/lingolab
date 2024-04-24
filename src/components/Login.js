@@ -20,7 +20,7 @@ function Login() {
             return;  
         }
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/authenticate', credentials);
+            const response = await axios.post('http://localhost:8080/api/users/authenticate', credentials);
             localStorage.setItem('jwt', response.data.jwt);
             localStorage.setItem('username', credentials.username);
             

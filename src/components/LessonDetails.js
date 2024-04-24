@@ -22,7 +22,7 @@ function LessonDetails() {
   React.useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/contents/${lessonId}`);
+        const response = await axios.get(`http://localhost:8081/api/languages/contents/${lessonId}`);
         setLesson({
           title: response.data.title,
           description: response.data.description,
@@ -46,7 +46,7 @@ function LessonDetails() {
     const progressPercent = newCompletedStatus ? 100 : 0;
 
     try {
-      await axios.post('http://localhost:8080/api/user/lessons/complete', {
+      await axios.post('http://localhost:8080/api/users/lessons/complete', {
         username: username,
         lessonId: parseInt(lessonId, 10),
         progressPercent: progressPercent
