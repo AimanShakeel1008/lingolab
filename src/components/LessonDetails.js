@@ -22,7 +22,7 @@ function LessonDetails() {
   React.useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/languages/contents/${lessonId}`);
+        const response = await axios.get(`http://localhost:8080/api/languages/contents/${lessonId}`);
         setLesson({
           title: response.data.title,
           description: response.data.description,

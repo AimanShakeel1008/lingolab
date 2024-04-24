@@ -28,7 +28,7 @@ function LanguageDetails() {
 
   const fetchLessons = async (languageId) => {
     try {
-      const response = await axios.get(`http://localhost:8081/api/languages/contents/language/${languageId}`);
+      const response = await axios.get(`http://localhost:8080/api/languages/contents/language/${languageId}`);
       const lessonsData = response.data;
       setLanguageName(lessonsData[0]?.language?.name || '');
       fetchUserProgress(lessonsData);

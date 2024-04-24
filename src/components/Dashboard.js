@@ -25,7 +25,7 @@ function Dashboard() {
     }, [username]);
 
     const fetchAvailableLanguages = () => {
-        axios.get('http://localhost:8081/api/languages')
+        axios.get('http://localhost:8080/api/languages')
         .then(response => {
             setAvailableLanguages(response.data);
         })
@@ -47,7 +47,7 @@ function Dashboard() {
             }, {});
 
             const promises = registrationsResponse.data.map(async (lang) => {
-                const lessonsResponse = await axios.get(`http://localhost:8081/api/languages/contents/language/${lang.language.id}`);
+                const lessonsResponse = await axios.get(`http://localhost:8080/api/languages/contents/language/${lang.language.id}`);
                 const lessons = lessonsResponse.data || [];
                 const completedCount = lessons.filter(lesson => progressMap[lesson.id]).length;
                 const totalLessons = lessons.length;
