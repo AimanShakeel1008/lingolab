@@ -7,6 +7,7 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import LanguageDetails from './components/LanguageDetails';
 import LessonDetails from './components/LessonDetails';
+import ProfilePage from './components/ProfilePage';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -38,6 +39,9 @@ function App() {
                     <Route path="/lesson/:lessonId" element={
                       <PrivateRoute><LessonDetails />
                       </PrivateRoute>} 
+                    />
+                    <Route path="/profile" element={
+                      <PrivateRoute><ProfilePage /></PrivateRoute>}
                     />
                 </Routes>
             </Router>
