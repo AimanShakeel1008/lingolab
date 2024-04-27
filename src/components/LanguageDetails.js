@@ -9,17 +9,17 @@ import BookIcon from '@mui/icons-material/Book';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import Header from './Header'; // Ensure correct path
-import Footer from './Footer'; // Ensure correct path
+import Header from './Header';
+import Footer from './Footer';
 import axios from 'axios';
 
 function LanguageDetails() {
   const { languageId } = useParams();
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
-  const [progress, setProgress] = useState(0); // Updated to default to 0
+  const [progress, setProgress] = useState(0);
   const [languageName, setLanguageName] = useState('');
-  const jwt = localStorage.getItem('jwt'); // Ensure you're correctly managing JWT and username
+  const jwt = localStorage.getItem('jwt');
   const username = localStorage.getItem('username');
 
   useEffect(() => {

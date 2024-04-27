@@ -13,14 +13,13 @@ function Registration() {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
 
-    // Function to validate fields
     const validateForm = () => {
         let tempErrors = {};
         tempErrors.username = user.username ? "" : "Username is required.";
         tempErrors.email = user.email ? "" : "Email is required.";
         tempErrors.password = validatePassword(user.password);
         setErrors(tempErrors);
-        return Object.values(tempErrors).every(x => x === ""); // returns true if all fields are filled and valid
+        return Object.values(tempErrors).every(x => x === "");
     };
 
     const validatePassword = (password) => {
@@ -36,12 +35,12 @@ function Registration() {
         e.preventDefault();
         if (!validateForm()) {
             setMessage("Please correct the errors in the form.");
-            return; // Stop the submission if validation fails
+            return;
         }
         try {
             const response = await axios.post('http://localhost:8080/api/users/register', user);
             setMessage('Registration successful! You can now login.');
-            setUser({ username: '', email: '', password: '' }); // Clear the form fields
+            setUser({ username: '', email: '', password: '' });
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setMessage(error.response.data.message);
@@ -50,10 +49,6 @@ function Registration() {
             }
             console.error('Registration error:', error.response || error);
         }
-    };
-
-    const goToLogin = () => {
-        navigate('/login');
     };
 
     return (

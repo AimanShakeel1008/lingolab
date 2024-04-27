@@ -8,7 +8,7 @@ import axios from 'axios';
 
 function ProfilePage() {
     const navigate = useNavigate();
-    const jwt = localStorage.getItem('jwt'); // JWT token for authentication
+    const jwt = localStorage.getItem('jwt');
     const [userData, setUserData] = useState({
         username: '',
         fullName: '',
@@ -21,8 +21,8 @@ function ProfilePage() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [errorFields, setErrorFields] = useState({});
-    const [countries, setCountries] = useState([]); // State for countries list
-    const [languages, setLanguages] = useState([]); // State for languages list
+    const [countries, setCountries] = useState([]);
+    const [languages, setLanguages] = useState([]);
 
     useEffect(() => {
         const username = localStorage.getItem('username');

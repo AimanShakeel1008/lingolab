@@ -2,13 +2,13 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
 
 function Header({ onLogout }) {
-  const navigate = useNavigate();  // Initialize the navigate function
+  const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    navigate('/profile');  // Navigate to the Profile page when the Profile button is clicked
+    navigate('/profile');
   };
 
   return (

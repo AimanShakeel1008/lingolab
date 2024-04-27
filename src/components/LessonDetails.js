@@ -9,7 +9,7 @@ import axios from 'axios';
 function LessonDetails() {
   const { lessonId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation(); // Retrieve location object
+  const location = useLocation();
   const jwt = localStorage.getItem('jwt');
   const username = localStorage.getItem('username');
 
@@ -26,7 +26,6 @@ function LessonDetails() {
         setLesson({
           title: response.data.title,
           description: response.data.description,
-          // Check if completed state is passed, otherwise fallback to fetched data
           completed: location.state?.completed ?? response.data.completed 
         });
       } catch (error) {
@@ -35,7 +34,7 @@ function LessonDetails() {
     };
 
     fetchLesson();
-  }, [lessonId, location.state?.completed]); // Listen to changes in completed state from location
+  }, [lessonId, location.state?.completed]);
 
   const handleBack = () => {
     navigate(-1);
