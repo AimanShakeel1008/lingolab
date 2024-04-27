@@ -67,6 +67,12 @@ function LanguageDetails() {
     navigate(`/lesson/${lessonId}`, { state: { completed } });
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('username');
+    navigate('/login');
+};
+
   const getIcon = (type) => {
     switch (type) {
       case "ARTICLE":
@@ -84,7 +90,7 @@ function LanguageDetails() {
 
   return (
     <React.Fragment>
-      <Header />
+      <Header onLogout={handleLogout} />
       <Container maxWidth="lg">
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', my: 4 }}>
           <Typography variant="h4">{languageName}</Typography>

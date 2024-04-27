@@ -41,6 +41,12 @@ function LessonDetails() {
     navigate(-1);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('username');
+    navigate('/login');
+  };
+
   const handleCompletion = async () => {
     const newCompletedStatus = !lesson.completed;
     const progressPercent = newCompletedStatus ? 100 : 0;
@@ -63,7 +69,7 @@ function LessonDetails() {
 
   return (
     <React.Fragment>
-      <Header />
+      <Header onLogout={handleLogout} />
       <Container maxWidth="lg">
         <Box sx={{ my: 4 }}>
           <Button startIcon={<ArrowBackIcon />} onClick={handleBack}>Back to Language Details</Button>
