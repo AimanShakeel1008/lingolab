@@ -149,13 +149,13 @@ function ProfilePage() {
             <Container component="main" maxWidth="lg" sx={{ pt: 8, position: 'relative', display: 'flex', mb: 4 }}>
                 <Box sx={{ width: 200, mr: 2, mt: 3 }}>
                     <Typography variant="h6" sx={{ mb: 2 }}>Navigation</Typography>
-                    <Link href="#" onClick={() => navigate('/progress')} sx={{ display: 'block', marginBottom: 1 }}>View Progress</Link>
-                    <Link href="#" onClick={() => navigate('/certificates')} sx={{ display: 'block', marginBottom : 1 }}>Certificates</Link>
+                    <Link href="#" onClick={() => navigate('/progress')} sx={{ display: 'block', marginBottom: 1, color: '#2b6585' }}>View Progress</Link>
+                    <Link href="#" onClick={() => navigate('/certificates')} sx={{ display: 'block', marginBottom : 1, color: '#2b6585' }}>Certificates</Link>
                 </Box>
                 <Paper elevation={6} sx={{ p: 3, mt: 3, flexGrow: 1, position: 'relative' }}>
                     <Box sx={{ position: 'absolute', right: 0, top: -48, display: 'flex', alignItems: 'center' }}>
                         <IconButton onClick={goBack} color="primary">
-                            <ArrowBackIcon />
+                            <ArrowBackIcon sx={{color: '#2b6585'}} />
                         </IconButton>
                         <Typography variant="button" onClick={goBack} sx={{ cursor: 'pointer', ml: 1 }}>
                             Back to Dashboard
@@ -193,9 +193,9 @@ function ProfilePage() {
                         </Grid>
                     </Grid>
                     {editMode ? (
-                        <Button onClick={handleSave} variant="contained" color="primary">Save</Button>
+                        <Button onClick={handleSave} variant="contained" sx={{background: '#2b6585'}}>Save</Button>
                     ) : (
-                        <Button onClick={handleEdit} variant="contained" color="primary">Edit</Button>
+                        <Button onClick={handleEdit} variant="contained" sx={{background: '#2b6585'}}>Edit</Button>
                     )}
                 </Paper>
             </Container>
@@ -204,7 +204,9 @@ function ProfilePage() {
                 <Alert onClose={handleCloseSnackbar} severity="info" sx={{ width: '100%' }}>{snackbarMessage}
                 </Alert>
             </Snackbar>
-            <Footer />
+            <div style={{marginTop:'11.7rem'}}>
+                <Footer />
+            </div>
         </>
     );
 }

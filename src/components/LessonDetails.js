@@ -80,7 +80,7 @@ function LessonDetails() {
           <FormControlLabel
             control={<Checkbox checked={lesson.completed} onChange={handleCompletion} />}
             label="Mark as Completed"
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, mb:58.3 }}
           />
         </Box>
       </Container>

@@ -13,7 +13,7 @@ function HomePage() {
                     alignItems: 'center',
                 }}
             >
-                <Typography component="h1" variant="h4" style={{ margin: "20px 0" }}>
+                <Typography component="h1" variant="h4" style={{ margin: "20px 0", fontSize: 60, fontWeight: 'bold' }}>
                     Lingo Lab
                 </Typography>
                 <Button
@@ -23,6 +23,7 @@ function HomePage() {
                     style={{ marginBottom: 10 }}
                     component={Link}
                     to="/register"
+                    sx={{background: '#2b6585'}}
                 >
                     Register
                 </Button>
@@ -32,6 +33,7 @@ function HomePage() {
                     fullWidth
                     component={Link}
                     to="/login"
+                    sx={{background:'#2b6585'}}
                 >
                     Login
                 </Button>

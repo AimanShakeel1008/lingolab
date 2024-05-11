@@ -129,7 +129,9 @@ function LanguageDetails() {
           )}
         </Grid>
       </Container>
-      <Footer />
+      <div style={{marginTop:'40px'}}>
+        <Footer />
+      </div>
     </React.Fragment>
   );
 }

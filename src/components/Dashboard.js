@@ -144,9 +144,9 @@ function Dashboard() {
                     {languages.length > 0 ? (
                         languages.map(language => (
                             <Grid item xs={12} sm={6} md={4} key={language.id}>
-                                <Card sx={{ maxWidth: 345, boxShadow: 3, bgcolor: '#3f51b5', color: '#fff', position: 'relative' }}>
+                                <Card sx={{ maxWidth: 345, boxShadow: 3, background: '#7406679e', color: '#fff', position: 'relative' }}>
                                 <Tooltip title="Unregister">
-                                        <IconButton onClick={() => handleDeleteLanguage(language.id)} sx={{ position: 'absolute', right: '8px', top: '8px', color: 'gray', zIndex: 1000 }}>
+                                        <IconButton onClick={() => handleDeleteLanguage(language.id)} sx={{ position: 'absolute', right: '8px', top: '8px', color: 'black', zIndex: 1000 }}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </Tooltip>
@@ -157,7 +157,7 @@ function Dashboard() {
                                                 <Typography variant="body2">Registration Date: {format(new Date(language.registrationDate), 'PPP')}</Typography>
                                             </Tooltip>
                                             <Typography variant="body2">Progress: {language.progress}%</Typography>
-                                            <LinearProgress variant="determinate" value={language.progress} sx={{ height: 10, borderRadius: 5, mt: 1 }} />
+                                            <LinearProgress variant="determinate" value={language.progress} sx={{ height: 10, borderRadius: 5, mt: 1}} />
                                         </CardContent>
                                     </CardActionArea>
                                 </Card>
@@ -179,7 +179,7 @@ function Dashboard() {
                             <MenuItem key={lang.id} value={lang.name}>{lang.name}</MenuItem>
                         ))}
                     </Select>
-                    <Button variant="contained" sx={{ mt: 2 }} onClick={handleAddLanguage}>Add Language</Button>
+                    <Button variant="contained" sx={{ mt: 2, background: '#2b6585' }} onClick={handleAddLanguage}>Add Language</Button>
                 </Box>
                 <Snackbar
                     open={openSnackbar}
@@ -210,7 +210,9 @@ function Dashboard() {
                     </DialogActions>
                 </Dialog>
             </Container>
-            <Footer />
+            <div style={{marginTop:'14.7rem'}}>
+                <Footer />
+            </div>    
         </React.Fragment>
     );
 }

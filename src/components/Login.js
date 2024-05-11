@@ -72,14 +72,14 @@ function Login() {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{ mt: 3, mb: 2, background: '#2b6585' }}
                     >
                         Login
                     </Button>
                     <Button
                         fullWidth
                         variant="outlined"
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, color: '#2b6585' }}
                         onClick={() => navigate('/register')}
                     >
                         Need an account? Register

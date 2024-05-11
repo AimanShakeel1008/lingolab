@@ -12,9 +12,9 @@ function Header({ onLogout }) {
   };
 
   return (
-    <AppBar position="static" color="primary" sx={{ mb: 4 }}>
+    <AppBar position="static" sx={{ mb: 4 , background: 'linear-gradient(150deg, #ce9f12b3, #2b6585 70%)' }}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: 45, fontWeight: 'bold' }}>
           LingoLab
         </Typography>
         <Button color="inherit" startIcon={<AccountCircleIcon />} onClick={handleProfileClick}>
